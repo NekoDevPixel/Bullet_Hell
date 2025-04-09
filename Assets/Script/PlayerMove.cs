@@ -1,12 +1,13 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerMovei : MonoBehaviour
+public class PlayerMove : MonoBehaviour
 {
     Rigidbody2D rb;
+    [Header("Player Moving")]
     public float speed = 5f;
     private Vector2 moveInput;
-    private Camera mainCamera;
+    public Camera mainCamera;
     
     void Awake()
     {
@@ -24,6 +25,8 @@ public class PlayerMovei : MonoBehaviour
         moveInput = value.Get<Vector2>();
     }
 
+    
+
     private void LookAtMouse()
     {
         Vector3 mouseScreenPosition = Mouse.current.position.ReadValue();
@@ -36,4 +39,6 @@ public class PlayerMovei : MonoBehaviour
         // 회전 (z축 기준)
         rb.rotation = angle -90f;;
     }
+
+    
 }
