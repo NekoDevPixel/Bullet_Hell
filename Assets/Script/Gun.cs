@@ -22,9 +22,14 @@ public class Gun : MonoBehaviour
         Vector3 mousePos = mainCamera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         mousePos.z = 0f;
         Vector2 direction = (mousePos - transform.position).normalized;
+        
 
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
-        bullet.GetComponent<Bullet>().SetDirection(direction);
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+        // 총알 회전: 총알이 오른쪽(→)을 바라보는 프리팹일 경우, angle 그대로 적용
+        Quaternion rotation = Quaternion.Euler(0, 0, angle);
+
+        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, rotation);
     }
 
     void OnFire(InputValue value)
