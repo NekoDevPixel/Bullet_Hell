@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 public class Gun : MonoBehaviour
 {
@@ -10,11 +11,20 @@ public class Gun : MonoBehaviour
     private Camera mainCamera;
     public int magazine = 6;
     private int load_magazine;
+    public float reloadTime = 0.5f; // 장전 시간 (초)
+    private bool isReloading = false;
+    [Header("Gun sound")]
+    public AudioClip gunShotSound;// 🔊 쏠 때 사운드
+    public AudioClip gunReloadSound;  
+    public AudioClip gunNobulletSound;           
+    private AudioSource audioSource;
 
     void Awake()
     {
         mainCamera = Camera.main;
         load_magazine = magazine;
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Shoot()
@@ -30,6 +40,11 @@ public class Gun : MonoBehaviour
         Quaternion rotation = Quaternion.Euler(0, 0, angle);
 
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, rotation);
+
+        if (gunShotSound != null)
+        {
+            audioSource.PlayOneShot(gunShotSound);
+        }
     }
 
     void OnFire(InputValue value)
@@ -42,19 +57,38 @@ public class Gun : MonoBehaviour
 
     public void Reload()
     {
-        if (magazine == 0)
+        if (magazine < load_magazine  && !isReloading)
         {
-            
-            magazine = load_magazine;
-            Debug.Log("Loaded complete");
+            if (gunReloadSound != null)
+            {
+                audioSource.PlayOneShot(gunReloadSound);
+            }
+            StartCoroutine(ReloadCoroutine());
         }
     }
+    private IEnumerator ReloadCoroutine()
+    {
+        isReloading = true;
+        Debug.Log("Reloading...");
+
+        yield return new WaitForSeconds(reloadTime); // 딜레이
+
+        magazine = load_magazine;
+        isReloading = false;
+        Debug.Log("Reload complete!");
+    }
     public void Fire(){
+        if (isReloading) return;
+
         if (magazine != 0){
             Shoot(); // Gun 스크립트에게 발사 요청
             magazine--;
         }
         if (magazine == 0){
+            if (gunNobulletSound != null)
+            {
+                audioSource.PlayOneShot(gunNobulletSound);
+            }
             Debug.Log("Press the R key to load it");
         }
     }

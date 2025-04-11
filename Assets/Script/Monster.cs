@@ -5,6 +5,7 @@ public class Monster : MonoBehaviour
     [Header("Monster Imformation")]
     public int maxHealth = 10;
     public float moveSpeed = 2f;             // 몬스터 이동 속도
+    public int Mdamage = 10;
     private int currentHealth;
     private Transform player;                // 플레이어 위치
 
