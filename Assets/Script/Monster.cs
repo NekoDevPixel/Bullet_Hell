@@ -46,9 +46,11 @@ public class Monster : MonoBehaviour
     }
 
     private void Die()
-    {
+    {   
         // 효과음, 파티클 등 추가 가능
         Destroy(gameObject);
+        GameManager.Instance.AddKill();
+        FindFirstObjectByType<LevelCOunt>().AddExp(30);
     }
 
     private System.Collections.IEnumerator FlashColor()
