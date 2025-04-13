@@ -50,7 +50,8 @@ public class Monster : MonoBehaviour
         // 효과음, 파티클 등 추가 가능
         Destroy(gameObject);
         GameManager.Instance.AddKill();
-        FindFirstObjectByType<LevelCOunt>().AddExp(30);
+        GameManager.Instance.LevelUpExp();
+        GameManager.Instance.killMoney();
     }
 
     private System.Collections.IEnumerator FlashColor()
